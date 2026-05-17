@@ -8,6 +8,7 @@ import {
   getImprovement,
 } from "../lib/runningStats";
 import { secondsToPace, formatPace } from "../lib/formatters";
+import RaceProgressionCharts from "../components/RaceProgressionCharts";
 
 export default function Dashboard() {
   // Inicializar desde localStorage o preferencia del sistema
@@ -193,7 +194,7 @@ export default function Dashboard() {
       {/* STATS CARDS */}
       <div className="stats-grid">
 
-        {/* Tarjeta de estadísticas por distancia — PUNTO 3: badges */}
+        {/* Tarjeta de estadísticas por distancia */}
         <div className="stat-card stat-card-distance">
           <div className="stat-title">Races by Distance</div>
           <div className="distance-stats">
@@ -215,7 +216,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Tarjeta de PRs — PUNTO 4: solo distancia y tiempo */}
+        {/* Tarjeta de PRs */}
         <div className="stat-card stat-card-pr">
           <div className="stat-title">Personal Records</div>
           <div className="pr-stats">
@@ -315,6 +316,9 @@ export default function Dashboard() {
           </tbody>
         </table>
       </div>
+
+      {/* ── RACE PROGRESSION CHARTS ── */}
+      <RaceProgressionCharts darkMode={darkMode} />
     </div>
   );
 }

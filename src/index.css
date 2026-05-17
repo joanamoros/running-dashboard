@@ -685,3 +685,99 @@ body.light-mode .races-table-wrapper::-webkit-scrollbar-thumb {
 body.light-mode .distance-badge {
   color: #3b82f6;
 }
+
+.prog-section {
+  margin-top: 2.5rem;
+}
+ 
+/* Grid: 2 columnas para 5K y 6K, 10K ocupa toda la fila */
+.prog-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+ 
+/* La tercera tarjeta (10K) ocupa las dos columnas */
+.prog-grid .prog-chart-card:last-child {
+  grid-column: 1 / -1;
+}
+ 
+.prog-chart-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 1.25rem 1.25rem 1rem;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+ 
+.prog-chart-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.13);
+}
+ 
+.prog-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+ 
+.prog-chart-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0 0 3px;
+  letter-spacing: 0.01em;
+}
+ 
+.prog-chart-sub {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin: 0;
+}
+ 
+.prog-imp-arrow {
+  color: #10b981;
+  margin-right: 2px;
+  font-weight: 700;
+}
+ 
+.prog-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+ 
+/* ── Light mode overrides ── */
+body.light-mode .prog-chart-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+ 
+body.light-mode .prog-chart-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+ 
+body.light-mode .prog-chart-title {
+  color: #1e293b;
+}
+ 
+body.light-mode .prog-chart-sub {
+  color: #94a3b8;
+}
+ 
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .prog-grid {
+    grid-template-columns: 1fr;
+  }
+ 
+  .prog-grid .prog-chart-card:last-child {
+    grid-column: unset;
+  }
+ 
+  .prog-chart-wrap {
+    height: 180px;
+  }
+}
