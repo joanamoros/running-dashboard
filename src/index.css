@@ -1,0 +1,687 @@
+/* src/index.css */
+
+/* Importar tipografía Instrument Sans */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh;
+  padding: 2rem;
+  color: #f1f5f9;
+  transition: all 0.3s ease;
+}
+
+/* Dashboard Container - sin glass */
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+/* Dashboard Title */
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 2rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.dashboard-title::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #2596be, #aa3bff);
+  border-radius: 3px;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+/* UPCOMING RACE SECTION */
+.upcoming-section {
+  margin-bottom: 2rem;
+}
+
+.upcoming-card {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  transition: all 0.3s ease;
+}
+
+.upcoming-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.upcoming-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.upcoming-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.upcoming-distance {
+  background: rgba(139, 92, 246, 0.3);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.upcoming-location {
+  color: #94a3b8;
+}
+
+.upcoming-date {
+  color: #60a5fa;
+}
+
+.upcoming-countdown {
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+/* STATS GRID */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.stat-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+}
+
+/* Distance Stats */
+.distance-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.distance-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.distance-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #60a5fa;
+}
+
+.distance-count {
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.distance-best {
+  font-family: monospace;
+  font-weight: 600;
+  color: #fbbf24;
+}
+
+.distance-item.future {
+  opacity: 0.6;
+}
+
+.distance-item.future .distance-best {
+  color: #94a3b8;
+}
+
+/* PR Stats */
+.pr-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pr-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pr-distance {
+  font-weight: 700;
+  font-size: 1rem;
+  min-width: 45px;
+  color: #fbbf24;
+}
+
+.pr-time {
+  font-family: monospace;
+  font-weight: 600;
+  color: #fff;
+}
+
+.pr-race {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  max-width: 120px;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pr-item.future {
+  opacity: 0.5;
+}
+
+.pr-item.future .pr-time {
+  color: #94a3b8;
+}
+
+/* General Stats */
+.general-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.general-item {
+  text-align: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0.75rem;
+}
+
+.general-label {
+  display: block;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.general-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.general-value.positive {
+  color: #10b981;
+}
+
+.general-value.negative {
+  color: #ef4444;
+}
+
+/* TABLE HEADER */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.table-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Map Button */
+.map-button {
+  background: linear-gradient(135deg, #2596be, #60a5fa);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-family: 'Instrument Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.map-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 150, 190, 0.3);
+  background: linear-gradient(135deg, #1a6f8f, #3b82f6);
+}
+
+/* Light mode */
+body.light-mode .map-button {
+  background: linear-gradient(135deg, #2596be, #3b82f6);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .map-button:hover {
+  background: linear-gradient(135deg, #1a6f8f, #2563eb);
+}
+
+/* TABLE STYLES */
+.races-table-wrapper {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+}
+
+.races-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.races-table th,
+.races-table td {
+  padding: 0.875rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.races-table th {
+  background: rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+}
+
+.races-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+.races-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Date Cell */
+.date-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.date-day {
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2596be, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.date-month {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.date-year {
+  font-size: 0.6rem;
+  color: #64748b;
+}
+
+/* Cell Styles */
+.distance-cell,
+.time-cell,
+.official-cell,
+.pace-cell,
+.bib-cell,
+.position-cell {
+  text-align: center;
+}
+
+.distance-cell {
+  font-weight: 600;
+  color: #60a5fa;
+}
+
+.time-cell {
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.pace-cell {
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.race-name {
+  font-weight: 500;
+  text-align: left;
+}
+
+/* Theme Toggle Switch */
+.theme-toggle {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 100;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 70px;
+  height: 36px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.toggle-switch.light {
+  background: linear-gradient(135deg, #fef9c3, #fde047);
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.dark .toggle-slider {
+  transform: translateX(32px);
+}
+
+.toggle-icon {
+  font-size: 18px;
+}
+
+/* Light Mode Styles */
+body.light-mode {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+}
+
+body.light-mode .dashboard-container {
+  background: white;
+}
+
+body.light-mode .dashboard-title {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+body.light-mode .stat-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+body.light-mode .stat-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+body.light-mode .stat-title {
+  color: #64748b;
+}
+
+body.light-mode .distance-item,
+body.light-mode .pr-item {
+  border-bottom-color: #e2e8f0;
+}
+
+body.light-mode .distance-label {
+  color: #3b82f6;
+}
+
+body.light-mode .distance-count {
+  color: #64748b;
+}
+
+body.light-mode .pr-time {
+  color: #1e293b;
+}
+
+body.light-mode .general-item {
+  background: #f1f5f9;
+}
+
+body.light-mode .general-value {
+  color: #1e293b;
+}
+
+body.light-mode .upcoming-card {
+  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+  border: 1px solid #c7d2fe;
+}
+
+body.light-mode .upcoming-name {
+  color: #1e293b;
+}
+
+body.light-mode .upcoming-distance {
+  background: #c7d2fe;
+  color: #3730a3;
+}
+
+body.light-mode .upcoming-location {
+  color: #475569;
+}
+
+body.light-mode .upcoming-date {
+  color: #3b82f6;
+}
+
+body.light-mode .upcoming-countdown {
+  color: #f59e0b;
+}
+
+body.light-mode .section-title {
+  color: #475569;
+}
+
+body.light-mode .races-table {
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+body.light-mode .races-table th {
+  background: #f8fafc;
+  color: #475569;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+body.light-mode .races-table td {
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+body.light-mode .races-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+body.light-mode .date-year {
+  color: #94a3b8;
+}
+
+body.light-mode .distance-cell {
+  color: #3b82f6;
+}
+
+body.light-mode .pace-cell {
+  color: #f59e0b;
+}
+
+body.light-mode .table-header h2 {
+  background: linear-gradient(135deg, #1e293b, #334155);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+  
+  .dashboard-container {
+    padding: 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .theme-toggle {
+    top: 1rem;
+    right: 1rem;
+  }
+  
+  .toggle-switch {
+    width: 60px;
+    height: 32px;
+  }
+  
+  .toggle-slider {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .toggle-switch.dark .toggle-slider {
+    transform: translateX(28px);
+  }
+  
+  .races-table th,
+  .races-table td {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .date-day {
+    font-size: 0.9rem;
+  }
+  
+  .upcoming-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Scrollbar personalizada */
+.races-table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.races-table-wrapper::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.races-table-wrapper::-webkit-scrollbar-thumb {
+  background: #2596be;
+  border-radius: 10px;
+}
+
+body.light-mode .races-table-wrapper::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+body.light-mode .races-table-wrapper::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+}
+
+.distance-badges {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  padding: 0 0.75rem;
+  flex-wrap: wrap;
+}
+
+.distance-badge {
+  color: #60a5fa;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+body.light-mode .distance-badge {
+  color: #3b82f6;
+}
