@@ -1,14 +1,21 @@
 // pages/Dashboard.tsx
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
+import { FiSearch } from "react-icons/fi";
 import { races } from "../data/races";
 import {
   getBestRace,
   getAveragePace,
   getImprovement,
 } from "../lib/runningStats";
-import { secondsToPace, formatPace } from "../lib/formatters";
-import RaceProgressionCharts from "../components/RaceProgressionCharts";
+import {
+  secondsToPace,
+  kmToMiles,
+  paceSecPerKmToSecPerMile,
+  secondsToPaceColon,
+} from "../lib/formatters";
+
+type UnitSystem = "metric" | "imperial";
 
 export default function Dashboard() {
   // Inicializar desde localStorage o preferencia del sistema
@@ -22,18 +29,30 @@ export default function Dashboard() {
 
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
 
-  // Aplicar tema al body cuando cambie
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-mode");
-      document.body.classList.remove("light-mode");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.body.classList.add("light-mode");
-      document.body.classList.remove("dark-mode");
-      localStorage.setItem("theme", "light");
-    }
+  // Buscador de carreras (por nombre o lugar) y unidades de la tabla
+  const [searchTerm, setSearchTerm] = useState("");
+  const [unitSystem, setUnitSystem] = useState<UnitSystem>("metric");
+
+  // Aplicar el tema al body ANTES del pintado (useLayoutEffect, no useEffect)
+  // para evitar el parpadeo (flash) al cargar la página en el tema equivocado.
+  useLayoutEffect(() => {
+    document.body.classList.toggle("dark-mode", darkMode);
+    document.body.classList.toggle("light-mode", !darkMode);
   }, [darkMode]);
+
+  // Si el usuario todavía no ha elegido un tema manualmente (no hay nada
+  // guardado en localStorage), seguir en tiempo real el tema del sistema
+  // operativo. En cuanto el usuario pulsa el botón se guarda su preferencia
+  // explícita y se deja de escuchar los cambios del sistema.
+  useEffect(() => {
+    if (localStorage.getItem("theme")) return;
+
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e: MediaQueryListEvent) => setDarkMode(e.matches);
+
+    mql.addEventListener("change", handleChange);
+    return () => mql.removeEventListener("change", handleChange);
+  }, []);
 
   // Filtrar carreras completadas (con tiempo)
   const completedRaces = races.filter(race => race.finish_time_sec > 0);
@@ -66,7 +85,9 @@ export default function Dashboard() {
     .sort((a, b) => a - b);
 
   const best5k = getBestRace(completedRaces, 5);
+  const best6k = getBestRace(completedRaces, 6);
   const best10k = getBestRace(completedRaces, 10);
+  const best21k = getBestRace(completedRaces, 21);
   const avgPace = getAveragePace(completedRaces);
   const improvement = getImprovement(completedRaces);
 
@@ -101,6 +122,20 @@ export default function Dashboard() {
     }
   });
 
+  // Filtrar por término de búsqueda (nombre de carrera o lugar)
+  const filteredRaces = sortedRaces.filter(race => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return true;
+    return (
+      race.name.toLowerCase().includes(term) ||
+      race.location.toLowerCase().includes(term)
+    );
+  });
+
+  // Etiquetas de columna según la unidad elegida
+  const distanceColumnLabel = unitSystem === "metric" ? "Dist (km)" : "Dist (mi)";
+  const paceColumnLabel = unitSystem === "metric" ? "Pace (min/km)" : "Pace (min/mi)";
+
   // Icono de ordenación
   const SortIcon = ({ columnKey }: { columnKey: string }) => {
     const isActive = sortConfig?.key === columnKey;
@@ -130,9 +165,11 @@ export default function Dashboard() {
     return "th";
   };
 
-  // Toggle dark mode
+  // Toggle dark mode (elección manual y explícita del usuario -> se persiste)
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+    const next = !darkMode;
+    setDarkMode(next);
+    localStorage.setItem("theme", next ? "dark" : "light");
   };
 
   // Calcular días hasta la próxima carrera
@@ -147,22 +184,25 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      {/* Toggle Switch */}
-      <div className="theme-toggle">
-        <button 
-          className={`toggle-switch ${darkMode ? "dark" : "light"}`}
-          onClick={toggleDarkMode}
-          aria-label="Toggle theme"
-        >
-          <span className="toggle-slider">
-            <span className="toggle-icon">{darkMode ? "🌙" : "☀️"}</span>
-          </span>
-        </button>
-      </div>
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">
+          Running Dashboard
+        </h1>
 
-      <h1 className="dashboard-title">
-        Running Dashboard
-      </h1>
+        <div className="theme-toggle">
+          <button
+            className={`toggle-switch ${darkMode ? "dark" : "light"}`}
+            onClick={toggleDarkMode}
+            aria-pressed={darkMode}
+            aria-label={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+            title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+          >
+            <span className="toggle-slider">
+              <span className="toggle-icon" aria-hidden="true">{darkMode ? "🌙" : "☀️"}</span>
+            </span>
+          </button>
+        </div>
+      </div>
 
       {/* UPCOMING RACE SECTION */}
       {upcomingRaces.length > 0 && (
@@ -199,17 +239,12 @@ export default function Dashboard() {
           <div className="stat-title">Races by Distance</div>
           <div className="distance-stats">
             {sortedDistances.map(dist => {
-              const count = distanceStats[dist].count;
+              const racesForDistance = completedRaces.filter(r => r.distance_km === dist);
               const label = dist === 21.1 ? "21K" : `${dist}K`;
               return (
                 <div key={dist} className="distance-item">
                   <span className="distance-label">{label}</span>
-                  <span className="distance-badges">
-                    {Array.from({ length: count }).map((_, i) => (
-                      <span key={i} className="distance-badge">●</span>
-                    ))}
-                  </span>
-                  <span className="distance-count">{count} {count === 1 ? "race" : "races"}</span>
+                  <span className="distance-count">{racesForDistance.length} {racesForDistance.length === 1 ? "race" : "races"}</span>
                 </div>
               );
             })}
@@ -225,8 +260,16 @@ export default function Dashboard() {
               <span className="pr-time">{best5k?.finish_time || "-"}</span>
             </div>
             <div className="pr-item">
+              <span className="pr-distance">6K</span>
+              <span className="pr-time">{best6k?.finish_time || "-"}</span>
+            </div>
+            <div className="pr-item">
               <span className="pr-distance">10K</span>
               <span className="pr-time">{best10k?.finish_time || "-"}</span>
+            </div>
+            <div className="pr-item">
+              <span className="pr-distance">21K</span>
+              <span className="pr-time">{best21k?.finish_time || "-"}</span>
             </div>
           </div>
         </div>
@@ -261,7 +304,31 @@ export default function Dashboard() {
 
       {/* TABLA COMPLETA */}
       <div className="table-header">
-        <h2>Race History</h2>
+        <div className="table-header-left">
+          <h2>Race History</h2>
+
+          <div className="search-box">
+            <FiSearch className="search-icon" aria-hidden="true" />
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Buscar por carrera o lugar..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Buscar carrera"
+            />
+          </div>
+        </div>
+
+        <select
+          className="unit-select"
+          value={unitSystem}
+          onChange={(e) => setUnitSystem(e.target.value as UnitSystem)}
+          aria-label="Unidades de distancia y ritmo"
+        >
+          <option value="metric">km · min/km</option>
+          <option value="imperial">mi · min/mi</option>
+        </select>
       </div>
 
       <div className="races-table-wrapper">
@@ -271,10 +338,10 @@ export default function Dashboard() {
               {[
                 { key: "date",     label: "Date" },
                 { key: "name",     label: "Race" },
-                { key: "distance", label: "Dist" },
+                { key: "distance", label: distanceColumnLabel },
                 { key: "time",     label: "Time" },
                 { key: "official", label: "Official" },
-                { key: "pace",     label: "Pace" },
+                { key: "pace",     label: paceColumnLabel },
                 { key: "bib",      label: "Bib" },
                 { key: "position", label: "Position" },
               ].map(({ key, label }) => (
@@ -290,35 +357,59 @@ export default function Dashboard() {
           </thead>
 
           <tbody>
-            {sortedRaces.map((race, i) => {
-              const positionNum = getPositionNumber(race.general_position);
-              return (
-                <tr key={i}>
-                  <td className="date-cell">
-                    <span className="date-day">{new Date(race.date).getDate()}</span>
-                    <span className="date-month">{new Date(race.date).toLocaleString('default', { month: 'short' })}</span>
-                    <span className="date-year">{new Date(race.date).getFullYear()}</span>
-                  </td>
-                  <td className="race-name">{race.name}</td>
-                  <td className="distance-cell">{race.distance_km} km</td>
-                  <td className="time-cell">{race.finish_time}</td>
-                  <td className="official-cell">{race.official_time || "-"}</td>
-                  <td className="pace-cell">{race.pace ? formatPace(race.pace) : "-"}</td>
-                  <td className="bib-cell">{race.dorsal || "-"}</td>
-                  <td className="position-cell">
-                    {race.general_position && positionNum
-                      ? `${positionNum}${getPositionSuffix(positionNum)} (${race.category_position})`
-                      : "-"}
-                  </td>
-                </tr>
-              );
-            })}
+            {filteredRaces.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="no-results">
+                  No se encontraron carreras para &quot;{searchTerm}&quot;
+                </td>
+              </tr>
+            ) : (
+              filteredRaces.map((race, i) => {
+                const positionNum = getPositionNumber(race.general_position);
+                return (
+                  <tr key={i}>
+                    <td className="date-cell">
+                      <span className="date-day">{new Date(race.date).getDate()}</span>
+                      <span className="date-month">{new Date(race.date).toLocaleString('default', { month: 'short' })}</span>
+                      <span className="date-year">{new Date(race.date).getFullYear()}</span>
+                    </td>
+                    <td className="race-name">
+                      <span
+                        className="race-badge"
+                        style={{ backgroundColor: race.color_bg, color: race.color_text }}
+                      >
+                        {race.name}
+                      </span>
+                    </td>
+                    <td className="distance-cell">
+                      {unitSystem === "metric"
+                        ? `${race.distance_km} km`
+                        : `${kmToMiles(race.distance_km).toFixed(2)} mi`}
+                    </td>
+                    <td className="time-cell">{race.finish_time}</td>
+                    <td className="official-cell">{race.official_time || "-"}</td>
+                    <td className="pace-cell">
+                      {race.pace_sec_km
+                        ? secondsToPaceColon(
+                            unitSystem === "metric"
+                              ? race.pace_sec_km
+                              : paceSecPerKmToSecPerMile(race.pace_sec_km)
+                          )
+                        : "-"}
+                    </td>
+                    <td className="bib-cell">{race.dorsal || "-"}</td>
+                    <td className="position-cell">
+                      {race.general_position && positionNum
+                        ? `${positionNum}${getPositionSuffix(positionNum)} (${race.category_position})`
+                        : "-"}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
-
-      {/* ── RACE PROGRESSION CHARTS ── */}
-      <RaceProgressionCharts darkMode={darkMode} />
     </div>
   );
 }

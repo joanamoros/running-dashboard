@@ -21,7 +21,6 @@ export interface Race {
   // extra
   general_position?: string;
   category_position?: string;
-  coordinates?: { lat: number; lon: number };
   split_5k?: string;
   split_4k?: string; // Añadido para splits alternativos
 
@@ -57,7 +56,6 @@ export const races: Race[] = [
     pace_sec_km: paceToSeconds("5'07/km"),
     general_position: "444/1411",
     category_position: "393/971",
-    coordinates: { lat: 38.1917, lon: -0.5558 },
     color_bg: "#2596be",
     color_text: "white",
   },
@@ -76,7 +74,6 @@ export const races: Race[] = [
     pace_sec_km: paceToSeconds("5'18/km"),
     general_position: "522/784",
     category_position: "201/242",
-    coordinates: { lat: 38.2691, lon: -0.6989 },
     color_bg: "#faae3f",
     color_text: "#2e56a3",
   },
@@ -95,7 +92,6 @@ export const races: Race[] = [
     pace_sec_km: paceToSeconds("4'56/km"),
     general_position: "453/2059",
     category_position: "12/21",
-    coordinates: { lat: 38.5408, lon: -0.1226 },
     color_bg: "#ffffff",
     color_text: "#82afcd",
   },
@@ -114,9 +110,8 @@ export const races: Race[] = [
     pace_sec_km: paceToSeconds("5'49/km"),
     general_position: "358/986",
     category_position: "135/226",
-    coordinates: { lat: 38.2691, lon: -0.6989 },
-    color_bg: "#000000",
-    color_text: "#59d14b",
+    color_bg: "#59d14b",
+    color_text: "#000000",
   },
   {
     name: "52 Media Elche (10k Pompadour)",
@@ -134,7 +129,6 @@ export const races: Race[] = [
     split_5k: "25:14",
     general_position: "317/1292",
     category_position: "115/280",
-    coordinates: { lat: 38.2691, lon: -0.6989 },
     color_bg: "#e20909",
     color_text: "#ffffff",
   },
@@ -153,9 +147,8 @@ export const races: Race[] = [
     pace_sec_km: paceToSeconds("4'56/km"),
     general_position: "221/1265",
     category_position: "42/89",
-    coordinates: { lat: 38.2691, lon: -0.6989 },
-    color_bg: "#000000",
-    color_text: "#59d14b",
+    color_bg: "#59d14b",
+    color_text: "#000000",
   },
   {
     name: "XXIX Carrera al Amanecer Santa Pola",
@@ -172,7 +165,6 @@ export const races: Race[] = [
     pace_sec_km: paceToSeconds("4'24/km"),
     general_position: "140/1806",
     category_position: "126/1073",
-    coordinates: { lat: 38.1917, lon: -0.5558 },
     color_bg: "#2596be",
     color_text: "white",
   },
@@ -191,11 +183,9 @@ export const races: Race[] = [
     pace_sec_km: paceToSeconds("4'26/km"),
     general_position: "225/1346",
     category_position: "78/212",
-    coordinates: { lat: 38.1917, lon: -0.5558 },
     color_bg: "#f4b00e",
     color_text: "#000000",
   },
-  // 🆕 Carrera futura
   {
     name: "V Elche Night Race (5k)",
     distance: "5km",
@@ -211,8 +201,25 @@ export const races: Race[] = [
     pace_sec_km: paceToSeconds("4'22/km"),
     general_position: "167/2004",
     category_position: "25/139",
-    coordinates: { lat: 38.2691, lon: -0.6989 },
-    color_bg: "#8b5cf6",
+    color_bg: "#59d14b",
+    color_text: "#000000",
+  },
+  {
+    // 🆕 Carrera futura (todavía sin resultado -> finish_time_sec: 0 la marca
+    // como "upcoming" y hace que aparezca en la sección "Upcoming Race" con
+    // la cuenta atrás). Actualiza estos campos cuando corras la carrera:
+    // dorsal, finish_time, official_time, pace, general_position, category_position.
+    name: "Gran Carrera del Mediterráneo 2026",
+    distance: "21.097 km",
+    distance_km: 21.097,
+    location: "Alicante", 
+    date: "2026-11-08",
+    date_obj: new Date("2026-11-08"),
+    finish_time: "-",
+    pace: "-",
+    finish_time_sec: 0,
+    pace_sec_km: 0,
+    color_bg: "#10b981",
     color_text: "white",
   },
 ];

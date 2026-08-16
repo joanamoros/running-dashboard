@@ -29,6 +29,15 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Dashboard Header (título + botón de tema) */
+.dashboard-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
 /* Dashboard Title */
 .dashboard-title {
   font-size: 2.5rem;
@@ -37,22 +46,10 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   text-align: center;
   letter-spacing: -0.02em;
   position: relative;
-}
-
-.dashboard-title::after {
-  content: '';
-  position: absolute;
-  bottom: -0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, #2596be, #aa3bff);
-  border-radius: 3px;
 }
 
 /* Section Title */
@@ -290,39 +287,80 @@ body {
   color: transparent;
 }
 
-/* Map Button */
-.map-button {
-  background: linear-gradient(135deg, #2596be, #60a5fa);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  font-family: 'Instrument Sans', sans-serif;
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: white;
-  cursor: pointer;
+/* Grupo izquierdo: título + buscador */
+.table-header-left {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.map-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 150, 190, 0.3);
-  background: linear-gradient(135deg, #1a6f8f, #3b82f6);
+/* Buscador de carreras */
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-/* Light mode */
-body.light-mode .map-button {
-  background: linear-gradient(135deg, #2596be, #3b82f6);
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.search-icon {
+  position: absolute;
+  left: 0.85rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  pointer-events: none;
 }
 
-body.light-mode .map-button:hover {
-  background: linear-gradient(135deg, #1a6f8f, #2563eb);
+.search-input {
+  font-family: 'Instrument Sans', sans-serif;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2rem;
+  padding: 0.5rem 1rem 0.5rem 2.35rem;
+  font-size: 0.875rem;
+  color: #f1f5f9;
+  min-width: 220px;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: #64748b;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Select de unidades (distancia + pace a la vez) */
+.unit-select {
+  font-family: 'Instrument Sans', sans-serif;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.unit-select:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.unit-select:focus-visible,
+.search-input:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem !important;
+  color: #64748b;
+  font-style: italic;
 }
 
 /* TABLE STYLES */
@@ -419,16 +457,30 @@ body.light-mode .map-button:hover {
 }
 
 .race-name {
-  font-weight: 500;
   text-align: left;
 }
 
+/* Badge con el color_bg (fondo) / color_text (texto) real de cada carrera */
+.race-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
 /* Theme Toggle Switch */
+/* Anclado a .dashboard-header (que ya tiene position: relative), no al
+   documento entero, así siempre queda pegado a la card sea cual sea el
+   ancho de la ventana. */
 .theme-toggle {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 100;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
 }
 
 .toggle-switch {
@@ -442,6 +494,11 @@ body.light-mode .map-button:hover {
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+}
+
+.toggle-switch:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 3px;
 }
 
 .toggle-switch.light {
@@ -595,6 +652,34 @@ body.light-mode .table-header h2 {
   color: transparent;
 }
 
+body.light-mode .search-input,
+body.light-mode .unit-select {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+body.light-mode .search-input::placeholder {
+  color: #94a3b8;
+}
+
+body.light-mode .search-input:focus {
+  background: #ffffff;
+  border-color: #93c5fd;
+}
+
+body.light-mode .unit-select:hover {
+  border-color: #cbd5e1;
+}
+
+body.light-mode .search-icon {
+  color: #94a3b8;
+}
+
+body.light-mode .no-results {
+  color: #94a3b8;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   body {
@@ -609,12 +694,16 @@ body.light-mode .table-header h2 {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
-  .theme-toggle {
-    top: 1rem;
-    right: 1rem;
+
+  .dashboard-header {
+    margin-bottom: 1.5rem;
   }
-  
+
+  .dashboard-title {
+    font-size: 1.5rem;
+    padding-right: 3.75rem;
+  }
+
   .toggle-switch {
     width: 60px;
     height: 32px;
@@ -642,6 +731,22 @@ body.light-mode .table-header h2 {
   .upcoming-details {
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-header-left {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input,
+  .unit-select {
+    width: 100%;
+    min-width: 0;
   }
 }
 
@@ -676,108 +781,13 @@ body.light-mode .races-table-wrapper::-webkit-scrollbar-thumb {
   flex-wrap: wrap;
 }
 
+/* Punto de color con el color_bg/color_text real de cada carrera */
 .distance-badge {
-  color: #60a5fa;
-  font-size: 0.65rem;
-  line-height: 1;
-}
-
-body.light-mode .distance-badge {
-  color: #3b82f6;
-}
-
-.prog-section {
-  margin-top: 2.5rem;
-}
- 
-/* Grid: 2 columnas para 5K y 6K, 10K ocupa toda la fila */
-.prog-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
- 
-/* La tercera tarjeta (10K) ocupa las dos columnas */
-.prog-grid .prog-chart-card:last-child {
-  grid-column: 1 / -1;
-}
- 
-.prog-chart-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-  padding: 1.25rem 1.25rem 1rem;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
- 
-.prog-chart-card:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.13);
-}
- 
-.prog-chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
- 
-.prog-chart-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #e2e8f0;
-  margin: 0 0 3px;
-  letter-spacing: 0.01em;
-}
- 
-.prog-chart-sub {
-  font-size: 0.72rem;
-  color: #64748b;
-  margin: 0;
-}
- 
-.prog-imp-arrow {
-  color: #10b981;
-  margin-right: 2px;
-  font-weight: 700;
-}
- 
-.prog-chart-wrap {
-  position: relative;
-  width: 100%;
-  height: 200px;
-}
- 
-/* ── Light mode overrides ── */
-body.light-mode .prog-chart-card {
-  background: #f8fafc;
-  border-color: #e2e8f0;
-}
- 
-body.light-mode .prog-chart-card:hover {
-  background: #ffffff;
-  border-color: #cbd5e1;
-}
- 
-body.light-mode .prog-chart-title {
-  color: #1e293b;
-}
- 
-body.light-mode .prog-chart-sub {
-  color: #94a3b8;
-}
- 
-/* ── Responsive ── */
-@media (max-width: 640px) {
-  .prog-grid {
-    grid-template-columns: 1fr;
-  }
- 
-  .prog-grid .prog-chart-card:last-child {
-    grid-column: unset;
-  }
- 
-  .prog-chart-wrap {
-    height: 180px;
-  }
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border-width: 1.5px;
+  border-style: solid;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
 }
